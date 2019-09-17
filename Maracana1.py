@@ -15,7 +15,7 @@ z1 = 0
 # point 2 (goal ceil-top): X=159px Y=110px
 # pixels=(35,47)
 # meters=(0,7.32,2.44)
-u2 = 36
+u2 = 35
 v2 = 47
 x2 = 0
 y2 = 7.32
