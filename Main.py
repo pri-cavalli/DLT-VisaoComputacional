@@ -1,9 +1,12 @@
 import numpy as np
 from numpy.linalg import svd, inv
 from Maracana1 import *
+import cv2
 
-
-def calculatePixels(x, y, z, cameraMatrix):
+def calculatePixels(cord, cameraMatrix):
+    x = cord[0]
+    y = cord[1]
+    z = cord[2]
     m11 = cameraMatrix[0][0]
     m12 = cameraMatrix[0][1]
     m13 = cameraMatrix[0][2]
@@ -18,7 +21,7 @@ def calculatePixels(x, y, z, cameraMatrix):
     m34 = cameraMatrix[2][3]
     u = (m11 * x + m12 * y + m13 * z + m14) / (m31 * x + m32 * y + m33 * z + m34)
     v = (m21 * x + m22 * y + m23 * z + m24) / (m31 * x + m32 * y + m33 * z + m34)
-    return u + 124, v + 157
+    return int(round(u) + 124), int(round(v) + 157)
 
 
 def calculateRealWorldPoint(point, cameraMatrix):
@@ -61,10 +64,21 @@ def main():
 
     P = V[len(V) - 1].reshape(3, 4)
 
-    givenPoint = np.array([159, 110])
-    givenPoint = givenPoint - np.array([origenX, origenY])
+    givenPoint = np.array([160, 138])
+    centerPoint = np.array([origenX, origenY])
+    givenPoint = givenPoint - centerPoint
     footRealWorldCords = calculateRealWorldPoint(givenPoint, P)
     headRealWorldCords = [footRealWorldCords[0], footRealWorldCords[1], 1.8]
+    headPoint = calculatePixels(headRealWorldCords, P)
+    img = cv2.imread("maracana1.jpg")
+    p1 = tuple(givenPoint + centerPoint)
+    p2 = tuple(headPoint)
+    img = cv2.line(img, p1, p2, (255,0,0), 2)
+    print("Origin: ", p1)
+    print("To: ", p2)
+    cv2.imshow('img', img)
+    cv2.waitKey(5000)
+
 
 if __name__ == '__main__':
     main()
