@@ -5,7 +5,8 @@ import cv2
 
 playerColor = (255, 0, 0 ) # Blue
 playerWidth = 2
-
+clickPoint = []
+hasClicked = False
 def calculatePixels(cord, cameraMatrix):
     x = cord[0]
     y = cord[1]
@@ -57,15 +58,50 @@ def getHeadPixels(footPixels, cameraMatrix):
 
 
 def main():
+    global hasClicked, playerWidth
     A = generateA()
     P = generateCameraProjectionMatrix(A)
-    footPixel = np.array([160, 138])
+    img = cv2.imread('maracana1.jpg')
+    cv2.namedWindow('image')
+    cv2.setMouseCallback('image', getClickPixels)
+    cv2.imshow('image', img)
+    key = 255
+    while True:
+        while not hasClicked and 255 == key:
+            key = cv2.waitKey(1) & 0xFF
+        if hasClicked:
+            drawPlayer(P, img)
+        if key == ord('q') or key == ord('Q'):
+            cv2.destroyAllWindows()
+            quit(0)
+        elif key == 61:
+            hasClicked = True
+            playerWidth += 1
+        elif key == 45:
+            hasClicked = True
+            if playerWidth > 1:
+                playerWidth -= 1
+        elif key == ord('r') or key == ord('R'):
+            img = cv2.imread('maracana1.jpg')
+            cv2.imshow('image', img)
+        key = 255
+
+
+def drawPlayer(P, img):
+    global hasClicked
+    footPixel = clickPoint
     headPixel = getHeadPixels(footPixel, P)
-    img = drawPlayerOnImage(footPixel, headPixel)
-    cv2.imshow('img', img)
-    cv2.waitKey(5000)
+    img = drawPlayerOnImage(footPixel, headPixel, img)
+    cv2.imshow('image', img)
+    hasClicked = False
 
 
+def getClickPixels(event, x, y, flags, param):
+    global clickPoint, hasClicked
+    if event == cv2.EVENT_LBUTTONDOWN:
+        clickPoint = [x, y]
+        hasClicked = True
+    
 def generateCameraProjectionMatrix(A):
     _, _, V = svd(A)
     P = V[len(V) - 1].reshape(3, 4)
@@ -89,8 +125,7 @@ def generateA():
     ])
 
 
-def drawPlayerOnImage(footPixel, headPixel):
-    img = cv2.imread("maracana1.jpg")
+def drawPlayerOnImage(footPixel, headPixel, img):
     p1 = tuple(footPixel)
     p2 = tuple(headPixel + np.array([origenX, origenY]))
     img = cv2.line(img, p1, p2, playerColor, playerWidth)
