@@ -22,7 +22,7 @@ def main():
             # Exercise 1
             img = drawPlayerOnMaracana1Image(clickPoint, img)
             hasClicked = False
-            
+
         if key == ord('q') or key == ord('Q'):
             cv2.destroyAllWindows()
             quit(0)
@@ -42,7 +42,7 @@ def createImageWindow():
     return img
 
 
-def getClickPixels(event, x, y):
+def getClickPixels(event, x, y, a, v):
     global clickPoint, hasClicked
     if event == cv2.EVENT_LBUTTONDOWN:
         clickPoint = [x, y]

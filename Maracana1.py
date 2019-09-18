@@ -59,21 +59,3 @@ v6 = 170 - originY
 x6 = 0
 y6 = -5.5
 z6 = 0
-
-# point 7 (top-left little-area): X=184px Y=126px
-# pixels=(60,31)
-# meters=(0,12.82,0)
-u7 = 184 - originX
-v7 = 126 - originY
-x7 = 0
-y7 = 12.82
-z7 = 0
-
-# point 8 (top-left big-area): X=366px Y=131px
-# pixels=(242, 26)
-# meters=(0,23.82,0)
-u8 = 366 - originX
-v8 = 131 - originY
-x8 = 0
-y8 = 23.82
-z8 = 0
