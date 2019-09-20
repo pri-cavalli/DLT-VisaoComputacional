@@ -30,9 +30,8 @@ def main():
             img = cv2.imread(IMAGE_NAME)
         cv2.imshow(IMAGE_WINDOW, img)
         key = NO_ACTION
-    # drawPlayerOnMaracana1Image()
     # Exercise 2
-    # drawOffsideLineOnMaracana2Image()
+    drawOffsideLineOnMaracana2Image()
 
 
 def createImageWindow():

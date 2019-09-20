@@ -1,46 +1,27 @@
 import numpy as np
 from numpy.linalg import svd, inv
 from Maracana2 import *
-# import cv2
-# 297, 23
-cornerKickMeters = 27.5
+import cv2
+
+cornerKickMetersTop = 24
+cornerKickMetersBottom = -42
 
 
 def drawOffsideLineOnMaracana2Image():
     A = generateA()
     P = generateCameraProjectionMatrix(A)
     givenPixel = np.array([0, 0])
-
     givenRealWorldPoint = calculateRealWorldPoint(givenPixel, P)
-    topCornerKickRealWorldPoint = np.array([givenRealWorldPoint[0], - cornerKickMeters])
-    bottomCornerKickRealWorldPoint = np.array([givenRealWorldPoint[0], cornerKickMeters])
+
+    topCornerKickRealWorldPoint = np.array([givenRealWorldPoint[0], cornerKickMetersTop])
+    bottomCornerKickRealWorldPoint = np.array([givenRealWorldPoint[0], cornerKickMetersBottom])
 
     topCornerKickPixel = calculatePixels(topCornerKickRealWorldPoint, P)
     bottomCornerKickPixel = calculatePixels(bottomCornerKickRealWorldPoint, P)
 
-    print "\n\n3d"
-    print "--expect:"
-    print givenRealWorldPoint
-    print "be equal to:"
-    print [0, 0]
-    print "--expect:"
-    print calculateRealWorldPoint(np.array([(297 - originX), (23 - originY)]), P)
-    print "be equal to:"
-    print bottomCornerKickRealWorldPoint
-    print "--expect:"
-    print calculateRealWorldPoint(np.array([(264 - originX), (343 - originY)]), P)
-    print "be equal to:"
-    print topCornerKickRealWorldPoint
-    print "\n2d"
-    print [givenPixel[0] + originX, givenPixel[1] + originY]
-    print "--expect:"
-    print [topCornerKickPixel[0] + originX, topCornerKickPixel[1] + originY]
-    print "be equal to:"
-    print [401, 238]
-    print "--expect:"
-    print [bottomCornerKickPixel[0] + originX, bottomCornerKickPixel[1] + originY]
-    print "be equal to:"
-    print [352, 23]
+    img = drawLineOnImage(topCornerKickPixel, bottomCornerKickPixel)
+    cv2.imshow('img', img)
+    cv2.waitKey(5000)
 
 
 def calculatePixels(coord, cameraMatrix):
@@ -61,21 +42,20 @@ def calculatePixels(coord, cameraMatrix):
 
 def generateA():
     return np.array([
-        [x1, y1, 0, 1, 0, 0, 0, 0, -u1 * x1, -u1 * y1, 0, -u1],
-        [0, 0, 0, 0, x1, y1, 0, 1, -v1 * x1, -v1 * y1, 0, -v1],
-        [x2, y2, 0, 1, 0, 0, 0, 0, -u2 * x2, -u2 * y2, 0, -u2],
-        [0, 0, 0, 0, x2, y2, 0, 1, -v2 * x2, -v2 * y2, 0, -v2],
-        [x3, y3, 0, 1, 0, 0, 0, 0, -u3 * x3, -u3 * y3, 0, -u3],
-        [0, 0, 0, 0, x3, y3, 0, 1, -v3 * x3, -v3 * y3, 0, -v3],
-        [x4, y4, 0, 1, 0, 0, 0, 0, -u4 * x4, -u4 * y4, 0, -u4],
-        [0, 0, 0, 0, x4, y4, 0, 1, -v4 * x4, -v4 * y4, 0, -v4]
+        [x1, y1, 1, 0, 0, 0, -u1 * x1, -u1 * y1, -u1],
+        [0, 0, 0, x1, y1, 1, -v1 * x1, -v1 * y1, -v1],
+        [x2, y2, 1, 0, 0, 0, -u2 * x2, -u2 * y2, -u2],
+        [0, 0, 0, x2, y2, 1, -v2 * x2, -v2 * y2, -v2],
+        [x3, y3, 1, 0, 0, 0, -u3 * x3, -u3 * y3, -u3],
+        [0, 0, 0, x3, y3, 1, -v3 * x3, -v3 * y3, -v3],
+        [x4, y4, 1, 0, 0, 0, -u4 * x4, -u4 * y4, -u4],
+        [0, 0, 0, x4, y4, 1, -v4 * x4, -v4 * y4, -v4],
     ])
 
 
 def generateCameraProjectionMatrix(A):
     _, _, V = svd(A)    
-    P = V[len(V) - 1].reshape(3, 4)
-    return np.delete(P, 2, 1)
+    return  V[len(V) - 1].reshape(3, 3)
 
 def calculateRealWorldPoint(point, cameraMatrix):
     u = point[0]
@@ -88,3 +68,9 @@ def calculateRealWorldPoint(point, cameraMatrix):
 
     return [realWorldX, realWorldY]
     
+def drawLineOnImage(pixel1, pixel2):
+    img = cv2.imread("maracana2.jpg")
+    p1 = tuple(pixel1 + np.array([originX, originY]))
+    p2 = tuple(pixel2 + np.array([originX, originY]))
+    img = cv2.line(img, p1, p2, (255, 0, 0 ), 2)
+    return img 
