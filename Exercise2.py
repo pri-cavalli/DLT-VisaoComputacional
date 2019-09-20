@@ -4,13 +4,13 @@ from Maracana2 import *
 import cv2
 
 cornerKickMetersTop = 24
-cornerKickMetersBottom = -42
+cornerKickMetersBottom = -43
 
 
-def drawOffsideLineOnMaracana2Image():
+def drawOffsideLineOnMaracana2Image(pixel, img):
     A = generateA()
     P = generateCameraProjectionMatrix(A)
-    givenPixel = np.array([0, 0])
+    givenPixel = np.array([pixel[0] - originX, pixel[1] - originY])
     givenRealWorldPoint = calculateRealWorldPoint(givenPixel, P)
 
     topCornerKickRealWorldPoint = np.array([givenRealWorldPoint[0], cornerKickMetersTop])
@@ -19,9 +19,7 @@ def drawOffsideLineOnMaracana2Image():
     topCornerKickPixel = calculatePixels(topCornerKickRealWorldPoint, P)
     bottomCornerKickPixel = calculatePixels(bottomCornerKickRealWorldPoint, P)
 
-    img = drawLineOnImage(topCornerKickPixel, bottomCornerKickPixel)
-    cv2.imshow('img', img)
-    cv2.waitKey(5000)
+    return drawLineOnImage(topCornerKickPixel, bottomCornerKickPixel, img)
 
 
 def calculatePixels(coord, cameraMatrix):
@@ -68,9 +66,7 @@ def calculateRealWorldPoint(point, cameraMatrix):
 
     return [realWorldX, realWorldY]
     
-def drawLineOnImage(pixel1, pixel2):
-    img = cv2.imread("maracana2.jpg")
+def drawLineOnImage(pixel1, pixel2, img):
     p1 = tuple(pixel1 + np.array([originX, originY]))
     p2 = tuple(pixel2 + np.array([originX, originY]))
-    img = cv2.line(img, p1, p2, (255, 0, 0 ), 2)
-    return img 
+    return cv2.line(img, p1, p2, (255, 0, 0 ), 2)
