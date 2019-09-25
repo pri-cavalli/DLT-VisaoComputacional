@@ -60,7 +60,7 @@
     \label{fig:planeToPlane}
     \end{figure}
         
-        \subsection{Matriz A}
+        \subsubsection{Matriz A}
         A matriz A foi modificada para ter o tamanho 9x4, já que retirou-se as três colunas que eram associadas à coordenada Z e usou-se apenas 4 pontos, como mencionado anteriormente. (Figure ~\ref{fig:matrizA})
         
         \begin{figure}[h!]
@@ -69,7 +69,7 @@
         \label{fig:matrizA}
         \end{figure}
         
-        \subsection{Matriz P}
+        \subsubsection{Matriz P}
         Fez-se \textit{svd} na Matriz A, então pegou a última matriz de V e se fez o \textit{reshape} para ficar do tamnho 3x3. (Figure ~\ref{fig:matrizP})
         
         \begin{figure}[h!]
@@ -78,7 +78,7 @@
         \label{fig:matrizP}
         \end{figure}
         
-    \section{Desenhar uma reta entre uma lateral a outra}
+    \subsection{Desenhar uma reta entre uma lateral a outra}
     Tem diversas formas de desenhar linhas paralelas a do impedimento, nesse trabalho escolheu-se a solução em que desenhava uma reta de uma lateral a outra. 
     
     Assim, só precisou descobrir os pontos das laterais. Implementou-se dessa forma: dado um ponto clicado na imagem e calculado no sistema 2D, descobria-se seu respectivo ponto Pm no mundo real (Figure ~\ref{fig:calculateRealWorldPoint}), e então, descobria os dois pontos em cada lateral (Pl1 e Pl2) fazendo Pl1 = (Pm[x], lateralDeCimaY) e Pl2 = (Pm[x], lateralDeBaixoY). Porém, a imagem da definição do trabalho não deixava claro qual o tamanho exato do campo (de 45 a 90m), então, também coletados manualmente, dois pixels localizados cada um em uma lateral e transformados em pontos do mundo real, então descobriu que a quadra tem aproximadamente 67m. Dessa forma, sabendo a origem, foi possível calcular o valor de lateralDeCimaY e lateralDeBaixoY.
@@ -95,11 +95,4 @@
         \caption{Função que calcula o ponto no mundo real dado o ponto na imagem e a matriz da câmera}
         \label{fig:result2}
         \end{figure}
-    
-
-\section{Conclusão}
-``I always thought something was fundamentally wrong with the universe'' \citep{adams1995hitchhiker}
-
-\bibliographystyle{plain}
-\bibliography{references}
 \end{document}
